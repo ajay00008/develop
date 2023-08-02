@@ -4,11 +4,12 @@ const fileUpload = require("express-fileupload");
 const path  = require('path')
 const sendFirebaseNotifications = require("./middleware/notifications");
 
-
 var cors = require("cors");
 const Message = require("./models/Message");
 const User = require("./models/User");
 const app = express();
+require('dotenv').config();
+
 
 connectDB();
 
