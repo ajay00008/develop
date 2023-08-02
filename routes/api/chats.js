@@ -4,7 +4,7 @@ const auth = require('../../middleware/auth');
 
 const router = Router();
 
-router.get("/", auth ,  async (req, res) => {
+router.get("/",  auth , async (req, res) => {
     const { limit = 10, page = 1 } = req.query;
     const skip = (page - 1) * limit;
     console.log(limit, page, skip);
@@ -35,7 +35,7 @@ router.get("/", auth ,  async (req, res) => {
             from: "users",
             localField: "reciever",
             foreignField: "_id",
-            as: "recieverinfo",
+            as: "receiverinfo",
           },
         },
         {
@@ -45,6 +45,30 @@ router.get("/", auth ,  async (req, res) => {
             foreignField: "_id",
             as: "senderinfo",
           },
+        },
+        {
+          '$addFields': {
+            'senderinfo': {
+              '$map': {
+                'input': '$senderinfo', 
+                'as': 'sender', 
+                'in': {
+                  '_id': '$$sender._id', 
+                  'username': '$$sender.username'
+                }
+              }
+            }, 
+            'receiverinfo': {
+              '$map': {
+                'input': '$receiverinfo', 
+                'as': 'receiver', 
+                'in': {
+                  '_id': '$$receiver._id', 
+                  'username': '$$receiver.username'
+                }
+              }
+            }
+          }
         },
         {
           $project: {
@@ -77,17 +101,8 @@ router.get("/", auth ,  async (req, res) => {
         {
           $group: {
             _id: "$room_id",
-            roomId: {
-              $first: "$room_id",
-            },
-            userId: {
-              $first: "$userId",
-            },
-            userName: {
-              $first: "$userName",
-            },
-            messages: {
-              $push: "$lastmessageDetails",
+            message: {
+              $first: "$lastmessageDetails",
             },
           },
         },
