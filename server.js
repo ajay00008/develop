@@ -55,6 +55,7 @@ app.get("/media/thumbnail/:name", (req, res) => {
 });
 
 
+
 app.use('/api/auth',require('./routes/api/auth'))
 app.use('/api/posts',require('./routes/api/posts'))
 app.use('/api/user',require('./routes/api/user'))
@@ -62,8 +63,12 @@ app.use('/api/reel',require('./routes/api/reel'))
 app.use('/api/messages',require('./routes/api/messages'))
 app.use('/api/notifications',require('./routes/api/notifications'))
 app.use('/api/subscription',require('./routes/api/subscription'))
+app.use('/api/categories',require('./routes/api/categories'))
+app.use('/api/chats',require('./routes/api/chats'))
 
-
+app.get("*", (req, res) => {
+  res.status(404).json({message:'no route found please check your endpoint and try again'})
+});
 
 
 const server = app.listen(PORT, () => {
