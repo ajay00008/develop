@@ -10,8 +10,7 @@ router.get("/",  auth , async (req, res) => {
     console.log(limit, page, skip);
     try {
       const loggedInUserId = req.auth.id;
-      // const loggedInUserId = '64c56f0ee396e3a8bc81d29d';
-  
+      // const loggedInUserId = '64c56f0ee396e3a8bc81d29d'; 
       const aggregate = [
         {
           $match: {
